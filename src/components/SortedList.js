@@ -1,37 +1,25 @@
 import * as React from 'react';
 import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
-import Paper from "@mui/material/Paper";
-import { styled } from '@mui/material/styles';
-import {Checkbox, Divider, Typography} from "@mui/material";
+import SortedListItem from "./SortedListItem";
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
+function sortFunction(a, b) {
+    if (a[0] === b[0]) {
+        return 0;
+    }
+    else {
+        return (a[0] < b[0]) ? -1 : 1;
+    }
+}
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
-export default function BasicStack() {
+export default function BasicStack({teams}) {
     return (
         <Box sx={{ width: '100%' }}>
-            <Stack spacing={2}>
-                <Item>
-                    <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} flexItem />}>
-                        <Item>
-                            <Checkbox {...label} />
-                        </Item>
-                        <Item>
-                            <Typography variant={"body1"}>1339</Typography>
-                        </Item>
-                        <Item>
-                            <Typography variant={"body1"}>Angelbotics</Typography>
-                        </Item>
-                    </Stack>
-                </Item>
+            <Stack alignItems={"center"} sx={{maxHeight: 800, overflow: 'auto'}} spacing={2}>
+                {
+                    (teams.sort(sortFunction)).map((team) => (
+                        <SortedListItem number={team[0]} name={team[1]} />
+                    ))}
             </Stack>
         </Box>
     );

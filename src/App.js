@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import SortedList from "./components/SortedList";
+import MainPage from "./components/MainPage";
+
 
 class App extends Component {
+
   render() {
     return (
-      <SortedList />
+        <MainPage />
     );
   }
 }
