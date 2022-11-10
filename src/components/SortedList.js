@@ -4,21 +4,21 @@ import Stack from "@mui/material/Stack"
 import SortedListItem from "./SortedListItem";
 
 function sortFunction(a, b) {
-    if (a[0] === b[0]) {
+    if (a.number === b.number) {
         return 0;
     }
     else {
-        return (a[0] < b[0]) ? -1 : 1;
+        return (a.number < b.number) ? -1 : 1;
     }
 }
 
-export default function BasicStack({teams}) {
+export default function PickList({teams}) {
     return (
         <Box sx={{ width: '100%' }}>
             <Stack alignItems={"center"} sx={{maxHeight: 800, overflow: 'auto'}} spacing={2}>
                 {
-                    (teams.sort(sortFunction)).map((team) => (
-                        <SortedListItem number={team[0]} name={team[1]} />
+                    (teams.sort(sortFunction)).map(({number, name}) => (
+                        <SortedListItem number={number} name={name} />
                     ))}
             </Stack>
         </Box>

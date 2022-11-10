@@ -2,14 +2,18 @@ import {Divider, IconButton, Typography} from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Stack from "@mui/material/Stack";
 import * as React from "react";
-import {Draggable} from "react-beautiful-dnd";
+import {Draggable} from "@hello-pangea/dnd";
 
 
 export default function PickListItem({name, number, rank}) {
-    return <Draggable key={rank} draggableId={name} index={rank}>
+    return <Draggable key={number.toString() + '1'} draggableId={name} index={rank}>
         {(provided) => (
             <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} flexItem />} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                <IconButton aria-label={"picked"}>
+                <IconButton aria-label={"picked"} onClick={(e)=>{
+                    e.stopPropagation();
+                    e.preventDefault();
+                    removeFunction(self, index);
+                }}>
                     <RemoveIcon />
                 </IconButton>
                 <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={25}>{rank}</Typography>

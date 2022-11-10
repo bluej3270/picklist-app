@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import * as React from "react";
 import PickListItem from "./PickListItem";
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import {useState} from "react";
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import {useEffect, useState} from "react";
 
 const teams = [{
     number: 1339,
@@ -20,21 +20,46 @@ export default function PickList() {
 
     const [picklist, updatePicklist] = useState(teams);
 
+    useEffect(() => {
+
+
+
+    }, [picklist])
+
     function handleOnDragEnd(result) {
         //If the draggable is dragged outside the droppable, return it to its original position
-        // if (!result.destination) return;
+        if (!result.destination) return;
 
-        //Create a new copy of the array of teams, remove the item, than add it back to the array in its new location.
-        // const items = Array.from(picklist);
-        // const [reorderedItem] = items.splice(result.source.index, 1);
-        // items.splice(result.destination.index, 0, reorderedItem);
+        //If the item is in the same place, no need to change the array
+        if (result.destination.index === result.source.index) {
+            return;
+        }
 
-        //Update the rendered array
-        // updatePicklist(items);
+        console.log(picklist)
+
+         //Create a new copy of the array of teams, remove the item, than add it back to the array in its new location.
+         const items = [...picklist]
+         const [removed] = items.splice(result.source.index, 1);
+         items.splice(result.destination.index, 0, removed);
+
+
+         //Update the rendered array
+         updatePicklist(items);
+         console.log(items)
+
 
     }
 
-    return <DragDropContext onDragEnd={handleOnDragEnd}>
+    function removeItem(item, index) {
+        if(window.confirm("Are you sure you want to delete this task?")){
+            let taskList = [...this.state.taskList]
+            taskList.splice(index, 1);
+            this.setState({taskList: taskList})
+        }
+    }
+
+    return (
+        <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId={'PickList'}>
             {(provided) => (
             <Box sx={{width : '100%'}} ref={provided.innerRef} {...provided.droppableProps}>
@@ -47,5 +72,6 @@ export default function PickList() {
             </Box> )}
         </Droppable>
     </DragDropContext>
+    )
 
 }
