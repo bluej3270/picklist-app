@@ -9,11 +9,7 @@ export default function PickListItem({name, number, rank}) {
     return <Draggable key={number.toString() + '1'} draggableId={name} index={rank}>
         {(provided) => (
             <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} flexItem />} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                <IconButton aria-label={"picked"} onClick={(e)=>{
-                    e.stopPropagation();
-                    e.preventDefault();
-                    removeFunction(self, index);
-                }}>
+                <IconButton aria-label={"picked"}>
                     <RemoveIcon />
                 </IconButton>
                 <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={25}>{rank}</Typography>

@@ -1,103 +1,126 @@
 import {
     Button, ButtonGroup,
     Container,
-    Dialog, DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid, TextField,
+    Grid,
     Typography
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import SortedList from "./SortedList";
 import PickList from "./PickList";
-import React from "react";
+import React, {useState} from "react";
+import AddButton from "./AddButton";
 
 export default function MainPage() {
-    // const teams = [[1, "Team 1"],[2, "Team 2"],[3, "Team 3"],[4, "Team 4"],[5, "Team 5"],[6, "Team 6"],[7, "Team 7"],[9998, "Team 9998"],[9997, "Team 9997"],[9996, "Team 9996"],[1339, "Angelbotics"], [1410, 'The Kraken'], [9999, "Team This Team Has A Super Long Name Because Why Not"], [1619, "Up-A-Creek"], [1111, "Demo Team"], [4550, "Sumthin's Bruin"], [1799, "Wired Up!"], [5493, "SMAbotics"], [118, "Robonaughts"], [1706, "Ratchet Rocker"], [2468, "Team Appreciate"]]
-    const teams = [
+ const teams = [
         {
             number: 1,
-            name: 'team 1'
+            name: 'team 1',
+            picked: false
         },{
             number: 2,
-            name: 'team 2'
+            name: 'team 2',
+            picked: false
         },{
             number: 3,
-            name: 'team 3'
+            name: 'team 3',
+            picked: false
         },{
             number: 4,
-            name: 'team 4'
+            name: 'team 4',
+            picked: false
         },{
             number: 5,
-            name: 'team 5'
+            name: 'team 5',
+            picked: false
         },{
             number: 6,
-            name: 'team 6'
+            name: 'team 6',
+            picked: false
         },{
             number: 7,
-            name: 'team 7'
+            name: 'team 7',
+            picked: false
         },{
             number: 9998,
-            name: 'team 9998'
+            name: 'team 9998',
+            picked: false
         },{
             number: 9997,
-            name: 'team 9997'
+            name: 'team 9997',
+            picked: false
         },{
             number: 9996,
-            name: 'team 9996'
+            name: 'team 9996',
+            picked: false
         },{
             number: 1339,
-            name: 'Angelbotics'
+            name: 'Angelbotics',
+            picked: false
         },{
             number: 1410,
-            name: 'The Kraken'
+            name: 'The Kraken',
+            picked: false
         },{
             number: 9999,
-            name: 'This Team Has A Super Long Name Because I Need It To'
+            name: 'This Team Has A Super Long Name Because I Need It To',
+            picked: false
         },{
             number: 1619,
-            name: 'Up A Creek'
+            name: 'Up A Creek',
+            picked: false
         },{
             number: 1111,
-            name: 'Team !!!!'
+            name: 'Team !!!!',
+            picked: false
         },{
             number: 4550,
-            name: 'Sumthins Bruin'
+            name: 'Sumthins Bruin',
+            picked: false
         },{
             number: 1799,
-            name: 'Wired Up'
+            name: 'Wired Up',
+            picked: false
         },{
             number: 5493,
-            name: 'SMAbotics'
+            name: 'SMAbotics',
+            picked: false
         },{
             number: 118,
-            name: 'The Robonaughts'
+            name: 'The Robonaughts',
+            picked: false
         },{
             number: 2468,
-            name: 'Team Appreciate'
+            name: 'Team Appreciate',
+            picked: false
         }
     ]
+
+    const [picklist, updatePicklist] = useState(teams)
+
+    const updatePickListFunction = (data) => {
+     updatePicklist(data);
+    }
+
     return (
         <Container maxWidth={"lg"}>
             <Grid container spacing={2} marginTop={5}>
                 <Grid item xs={5}>
                     <Stack alignItems={"center"} spacing={1}>
                         <Typography marginBottom={2}>Sorted List</Typography>
-                        <SortedList teams={teams} />
+                        <SortedList teams={picklist} />
                     </Stack>
                 </Grid>
                 <Grid item xs={5}>
                     <Stack alignItems={"center"} spacing={1}>
                         <Typography marginBottom={2}>Picklist</Typography>
-                        <PickList />
+                        <PickList picklist={picklist} updatePicklist={updatePickListFunction} />
                     </Stack>
                 </Grid>
                 <Grid item xs={2}>
                     <ButtonGroup>
-                        <Button variant={"outlined"}>Add</Button>
-                        <Button variant={"outlined"}>Sort</Button>
-                        <Button variant={"outlined"}>Clear</Button>
+                        <AddButton picklist={picklist} updatePicklist={updatePickListFunction} />
+                        <Button variant={"contained"}>Sort</Button>
+                        <Button variant={"contained"}>Clear</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>
