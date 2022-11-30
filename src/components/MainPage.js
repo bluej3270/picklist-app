@@ -1,13 +1,15 @@
 import {
-    Button, ButtonGroup, Card, Checkbox,
+    Box,
+    Card, Checkbox,
     Container, Divider,
-    Grid, IconButton,
+    Grid, IconButton, ListItemText, Menu, MenuItem,
     Typography
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import React, {useEffect, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import RemoveIcon from "@mui/icons-material/Remove";
+import {Remove, MoreHoriz, HighlightOff} from "@mui/icons-material";
+import {bindMenu, bindTrigger, usePopupState} from "material-ui-popup-state/hooks";
 
 export default function MainPage() {
     const teams = [
@@ -135,8 +137,9 @@ export default function MainPage() {
 
     const [allTeams, setAllTeams] = useState(teams);
 
-
     const [winReady, setWinReady] = useState(false);
+
+    const sortedPopupMenu = usePopupState({variant: 'popover', popupId: 'sortedPopupMenu'})
 
     function sortFunction(a, b) {
         if (a.number === b.number) {
@@ -155,36 +158,38 @@ export default function MainPage() {
     }, [allTeams])
 
     function SortedListItem(team) {
-        function handleOnChanged(event){
-           let tempList = JSON.parse(JSON.stringify(allTeams));
+        function handleOnChanged(event) {
+            let tempList = JSON.parse(JSON.stringify(allTeams));
 
-           for (const index in tempList) {
-               if(tempList[index].number.toString() === event.target.name){
-                   tempList[index].picked = event.target.checked;
-               }
-           }
-           setAllTeams(tempList);
+            for (const index in tempList) {
+                if (tempList[index].number.toString() === event.target.name) {
+                    tempList[index].picked = event.target.checked;
+                }
+            }
+            setAllTeams(tempList);
 
-       }
+        }
 
         return (<Stack key={team.team.number.toString()} direction={"row"} spacing={2}
                        divider={<Divider orientation={"vertical"} height={25} flexItem/>}>
             <IconButton aria-label={"picked"}>
-                <RemoveIcon/>
+                <Remove/>
             </IconButton>
             <Checkbox size={"small"} onChange={handleOnChanged} name={team.team.number} checked={team.team.picked}/>
-            <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}>{team.team.number}</Typography>
-            <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175}>{team.team.name}</Typography>
+            <Typography variant={"body1"} display={"flex"} alignItems={"center"}
+                        width={50}>{team.team.number}</Typography>
+            <Typography variant={"body1"} display={"flex"} alignItems={"center"}
+                        width={175}>{team.team.name}</Typography>
         </Stack>)
     }
 
     function PickListItem({team, index}) {
 
-        function handleOnChanged(event){
+        function handleOnChanged(event) {
             let tempList = JSON.parse(JSON.stringify(allTeams));
 
             for (const index in tempList) {
-                if(tempList[index].number.toString() + " pick" === event.target.name){
+                if (tempList[index].number.toString() + " pick" === event.target.name) {
                     tempList[index].flagged = event.target.checked;
                 }
             }
@@ -194,17 +199,22 @@ export default function MainPage() {
         return (
             <div>
                 {!team.picked && <Draggable key={team.number.toString() + '1'} draggableId={team.name} index={index}>
-            {(provided) => (
-                <div style={{backgroundColor: team.flagged ? "#fffbb9" : "white"}}>
-                <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} flexItem />} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                    <Checkbox size={"small"} onChange={handleOnChanged} name={team.number + " pick"} checked={team.flagged}/>
-                    <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}>{index + 1}</Typography>
-                    <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}>{team.number}</Typography>
-                    <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175}>{team.name}</Typography>
-                </Stack>
-                </div>
-            )}
-        </Draggable>}
+                    {(provided) => (
+                        <div style={{backgroundColor: team.flagged ? "#fffbb9" : "white"}}>
+                            <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} flexItem/>}
+                                   ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <Checkbox size={"small"} onChange={handleOnChanged} name={team.number + " pick"}
+                                          checked={team.flagged}/>
+                                <Typography variant={"body1"} display={"flex"} alignItems={"center"}
+                                            width={50}>{index + 1}</Typography>
+                                <Typography variant={"body1"} display={"flex"} alignItems={"center"}
+                                            width={50}>{team.number}</Typography>
+                                <Typography variant={"body1"} display={"flex"} alignItems={"center"}
+                                            width={175}>{team.name}</Typography>
+                            </Stack>
+                        </div>
+                    )}
+                </Draggable>}
             </div>)
 
 
@@ -212,12 +222,15 @@ export default function MainPage() {
 
     function SortedList() {
         return (<div>
-            <Stack direction={"row"} spacing={2}
-                   divider={<Divider orientation={"vertical"} height={25} flexItem/>}>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={40} height={50}>Delete</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={38} height={50}>Picked</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50} height={50}>Number</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175} height={50}>Name</Typography>
+            <Stack direction={"row"} spacing={2} divider={<Divider orientation={"vertical"} height={25} flexItem/>}>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={40}
+                            height={50}>Delete</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={38}
+                            height={50}>Picked</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}
+                            height={50}>Number</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175}
+                            height={50}>Name</Typography>
             </Stack>
             <Divider variant="fullWidth" orientation="horizontal"/>
             {sortedList.map((team) => (
@@ -249,10 +262,14 @@ export default function MainPage() {
         return (<div>
             <Stack direction={"row"} spacing={2}
                    divider={<Divider orientation={"vertical"} height={25} flexItem/>}>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={38} height={50}>Flag</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50} height={50}>Rank</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50} height={50}>Number</Typography>
-                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175} height={50}>Name</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={38}
+                            height={50}>Flag</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}
+                            height={50}>Rank</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={50}
+                            height={50}>Number</Typography>
+                <Typography variant={"body1"} display={"flex"} alignItems={"center"} width={175}
+                            height={50}>Name</Typography>
             </Stack>
             <Divider variant="fullWidth" orientation="horizontal"/>
             {winReady && <Droppable droppableId="droppable">
@@ -260,11 +277,11 @@ export default function MainPage() {
                     <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}>
-                    {allTeams.map((team, index) => (<div>
-                        <PickListItem team={team} index={index} key={team.name}/>
-                        </div>
-                    ))}
-                    {provided.placeholder}
+                        {allTeams.map((team, index) => (<div>
+                                <PickListItem team={team} index={index} key={team.name}/>
+                            </div>
+                        ))}
+                        {provided.placeholder}
                     </div>)}
             </Droppable>}
 
@@ -274,31 +291,36 @@ export default function MainPage() {
     return (
         <Container maxWidth={"lg"}>
             <DragDropContext onDragEnd={onDragEnd}>
-            <Grid container spacing={2} marginTop={5} sx={{mb:10}}>
-                <Grid item xs={5}>
-                    <Card sx={{height:"100%", width:"auto", boxShadow:5}}>
-                    <Stack alignItems={"center"} spacing={1}>
-                        <Typography variant="h4" marginBottom={2}>Sorted List</Typography>
-                        <SortedList/>
-                    </Stack>
-                    </Card>
+                <Grid container spacing={2} marginTop={5} sx={{mb: 10}}>
+                    <Grid item xs={5}>
+                        <Card sx={{height: "100%", width: "auto", boxShadow: 5}}>
+                            <Stack alignItems={"center"} spacing={1}>
+                                <Stack direction={"row"} spacing={2} alignItems={"center"} justifyContent={"center"}
+                                       width="100%">
+                                    <Typography variant="h4" marginBottom={2}>Sorted List</Typography>
+                                    <Box sx={{w: "100%"}}/>
+                                    <IconButton
+                                        variant="large" {...bindTrigger(sortedPopupMenu)}><MoreHoriz/></IconButton>
+                                    <Menu {...bindMenu(sortedPopupMenu)}>
+                                        <MenuItem onClick={sortedPopupMenu.close}>
+                                            <HighlightOff fontSize="medium"/>
+                                            <ListItemText sx={{ml: 1}}>Clear Picked Checkboxes</ListItemText>
+                                        </MenuItem>
+                                    </Menu>
+                                </Stack>
+                                <SortedList/>
+                            </Stack>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Card sx={{height: "100%", width: "auto", boxShadow: 5}}>
+                            <Stack alignItems={"center"} spacing={1}>
+                                <Typography variant="h4" marginBottom={2}>Picklist</Typography>
+                                <PickList/>
+                            </Stack>
+                        </Card>
+                    </Grid>
                 </Grid>
-                <Grid item xs={5}>
-                    <Card sx={{height:"100%", width:"auto", boxShadow:5}}>
-                    <Stack alignItems={"center"} spacing={1}>
-                        <Typography variant="h4" marginBottom={2}>Picklist</Typography>
-                        <PickList/>
-                    </Stack>
-                    </Card>
-                </Grid>
-                <Grid item xs={2}>
-                    <ButtonGroup>
-                        {/*<AddButton shownPicklist={shownPicklist} addToList={addToList} />*/}
-                        <Button variant={"contained"}>Sort</Button>
-                        <Button variant={"contained"}>Clear</Button>
-                    </ButtonGroup>
-                </Grid>
-            </Grid>
             </DragDropContext>
         </Container>
     );
